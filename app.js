@@ -195,6 +195,13 @@ new Vue({
         perPage: 10,
 
         currentPage: 1,
+
+        product: {
+            id: null,
+            name: '',
+            category: '',
+            price: ''
+        }
     },
 
     computed: {
@@ -255,10 +262,45 @@ new Vue({
 
         pages() {
             return Math.ceil(this.filteredProducts.length / this.perPage);
+        },
+
+        categories() {
+            let categories = this.products.map(el => el.category)
+
+            return Array.from(new Set(categories)).sort((a, b) => {
+                if (a < b) {
+                    return -1;
+                } else if (a > b) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
         }
+
+
     },
 
     methods: {
+
+        save() {
+            if (this.product.name && this.product.category && this.product.price) {
+                this.product.id = this.products.length + 1;
+
+                this.products.unshift(this.product)
+
+                this.product = {
+                    id: null,
+                    name: '',
+                    category: '',
+                    price: ''
+                }
+
+                $(this.$refs.vuemodal).modal('hide');
+            } else {
+                alert("Please fill in form properly");
+            }
+        },
 
         switchPage(page) {
             this.currentPage = page
