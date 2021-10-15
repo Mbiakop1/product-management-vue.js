@@ -243,10 +243,39 @@ new Vue({
             }
 
             return products;
+        },
+
+        isFirstPage() {
+            return this.currentPage == 1;
+        },
+
+        isLastPage() {
+            return this.currentPage >= this.pages;
+        },
+
+        pages() {
+            return Math.ceil(this.filteredProducts.length / this.perPage);
         }
     },
 
     methods: {
+
+        switchPage(page) {
+            this.currentPage = page
+        },
+
+        prev() {
+            if (!this.isFirstPage) {
+
+                this.currentPage--
+            }
+        },
+        next() {
+            if (!this.isLastPage) {
+
+                this.currentPage++
+            }
+        },
 
         clearText() {
             this.filters.name = "";
