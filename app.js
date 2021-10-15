@@ -184,18 +184,81 @@ new Vue({
         ],
 
         order: {
-            dir: 1
-        }
+            dir: 1,
+            column: 'price'
+        },
+
+        filters: {
+            name: ""
+        },
+
+        perPage: 10,
+
+        currentPage: 1,
     },
 
     computed: {
+
+        productsPaginated() {
+            let start = (this.currentPage - 1) * this.perPage;
+
+            let end = this.currentPage * this.perPage
+            return this.productsSorted.slice(start, end)
+        },
+
         productsSorted() {
-            return this.products.sort((a, b) => (a.price - b.price) * this.order.dir);
+            return this.filteredProducts.sort((a, b) => {
+                let left = a[this.order.column],
+                    right = b[this.order.column];
+
+                if (isNaN(left) && isNaN(right)) {
+
+                    if (left < right) return -1 * this.order.dir;
+                    else if (left > right) return 1 * this.order.dir;
+                    else {
+                        return 0;
+                    }
+
+                } else {
+
+                    return (left - right) * this.order.dir
+                }
+            });
+        },
+
+        sortType() {
+            this.order.dir == 1 ? "ascending" : "descending";
+        },
+
+        whenSearching() {
+            return this.filters.name.length > 0;
+        },
+
+        filteredProducts() {
+            let products = this.products;
+
+            if (this.filters.name) {
+                let findName = new RegExp(this.filters.name, 'i');
+                products = products.filter(el => el.name.match(findName));
+            }
+
+            return products;
         }
     },
 
     methods: {
-        sort() {
+
+        clearText() {
+            this.filters.name = "";
+        },
+
+        classes(column) {
+            return [".sort-control",
+                column == this.order.column ? this.sortType : ''
+            ]
+        },
+        sort(column) {
+            this.order.column = column
             this.order.dir *= -1;
         }
     }
