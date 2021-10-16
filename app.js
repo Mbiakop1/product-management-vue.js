@@ -201,7 +201,9 @@ new Vue({
             name: '',
             category: '',
             price: ''
-        }
+        },
+
+        isEdit: false
     },
 
     computed: {
@@ -276,12 +278,69 @@ new Vue({
                     return 0;
                 }
             });
-        }
+        },
 
+
+        modalTitle() {
+            return this.isEdit ? "Update Product" : "Add product";
+        },
+
+        modalTextBtn() {
+            return this.isEdit ? "Update" : "Save";
+        }
 
     },
 
     methods: {
+
+        del(product) {
+
+            if (confirm("Are you sure you want to delete this item ?")) {
+                let index = this.products.findIndex(item => item.id == product.id);
+
+                this.products.splice(index, 1)
+            }
+        },
+
+        add() {
+            this.isEdit = false;
+
+            this.product = {
+                id: null,
+                name: '',
+                category: '',
+                price: ''
+            }
+
+            $(this.$refs.vuemodal).modal('show');
+        },
+
+        edit(product) {
+            this.product = Object.assign({}, product)
+
+            this.isEdit = true;
+
+            $(this.$refs.vuemodal).modal('show');
+        },
+
+        saveOrUpdate() {
+            if (this.isEdit) {
+                this.update();
+            } else {
+                this.save();
+            }
+        },
+
+        update() {
+            let index = this.products.findIndex(item => item.id == this.product.id);
+
+            this.products.splice(index, 1, this.product);
+
+            this.isEdit = false;
+
+            $(this.$refs.vuemodal).modal('hide');
+
+        },
 
         save() {
             if (this.product.name && this.product.category && this.product.price) {
