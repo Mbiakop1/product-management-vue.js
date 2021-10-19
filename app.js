@@ -236,7 +236,7 @@ new Vue({
         },
 
         sortType() {
-            this.order.dir == 1 ? "ascending" : "descending";
+            return this.order.dir == 1 ? "ascending" : "descending";
         },
 
         whenSearching() {
