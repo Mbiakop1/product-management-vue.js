@@ -185,7 +185,7 @@ new Vue({
 
         order: {
             dir: 1,
-            column: 'price'
+            column: 'price',
         },
 
         filters: {
@@ -236,7 +236,7 @@ new Vue({
         },
 
         sortType() {
-            this.order.dir == 1 ? "ascending" : "descending";
+            return this.order.dir == 1 ? "ascending" : "descending";
         },
 
         whenSearching() {
@@ -384,11 +384,11 @@ new Vue({
 
         classes(column) {
             return [".sort-control",
-                column == this.order.column ? this.sortType : ''
+                column == this.order.column ? this.sortType : '',
             ]
         },
-        sort(column) {
-            this.order.column = column
+        sort(colum) {
+            this.order.column = colum
             this.order.dir *= -1;
         }
     }
